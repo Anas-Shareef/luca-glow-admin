@@ -1,0 +1,16 @@
+import { useState, useEffect } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import {
+  Save, ArrowLeft, Upload, X, ImagePlus, Tag,
+  DollarSign, Package, Search, Globe, ChevronDown
+} from 'lucide-react'
+import { PageHeader, Toggle } from '../../components/ui'
+import {
+  useProduct,
+  useCreateProduct,
+  useUpdateProduct,
+  useCategories,
+  useUploadProductMedia
+} from '../../api/hooks'
+import toast from 'react-hot-toast'
+import clsx from 'clsx'
