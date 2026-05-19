@@ -107,6 +107,12 @@ function OrderDetail({ order, open, onClose, onStatusChange }) {
                 <span>{l}</span><span>{formatINR(v)}</span>
               </div>
             ))}
+            <div className="flex justify-between text-sm text-slate-600">
+              <span>Payment Method</span>
+              <span className="uppercase font-semibold tracking-wider text-xs bg-slate-100 px-2 py-0.5 rounded">
+                {order.payment_method === 'cod' ? 'Cash on Delivery' : 'Razorpay'}
+              </span>
+            </div>
             <div className="flex justify-between font-bold text-slate-900 text-base pt-2 border-t border-slate-200">
               <span>Total</span><span>{formatINR(order.total_inr)}</span>
             </div>
@@ -233,7 +239,7 @@ export default function Orders() {
                 <table className="w-full min-w-[760px]">
                   <thead>
                     <tr className="border-b border-slate-100">
-                      {['Order ID', 'Customer', 'Total', 'Items', 'Status', 'Date', ''].map(h => (
+                      {['Order ID', 'Customer', 'Total', 'Payment', 'Items', 'Status', 'Date', ''].map(h => (
                         <th key={h} className="tbl-head text-left">{h}</th>
                       ))}
                     </tr>
@@ -249,6 +255,11 @@ export default function Orders() {
                           <p className="text-xs text-slate-400">{o.city}</p>
                         </td>
                         <td className="tbl-cell font-semibold text-slate-800">{formatINR(o.total_inr)}</td>
+                        <td className="tbl-cell">
+                          <span className="text-[10px] font-bold uppercase tracking-widest bg-slate-100 text-slate-500 px-2 py-1 rounded">
+                            {o.payment_method === 'cod' ? 'COD' : 'Razorpay'}
+                          </span>
+                        </td>
                         <td className="tbl-cell">
                           <span className="badge bg-slate-100 text-slate-600">{o.items} item{o.items !== 1 ? 's' : ''}</span>
                         </td>
