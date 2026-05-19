@@ -139,6 +139,44 @@ export default function ProductForm() {
     }))
   }
 
+  // Industry-standard SKU Generator
+  const handleGenerateSKU = () => {
+    if (!form.name) {
+      toast.error('Please enter a product name first');
+      return;
+    }
+
+    // 1. Brand Prefix
+    const prefix = 'LG';
+
+    // 2. Category Code (2 letters)
+    let catCode = '';
+    if (form.category_id && categoriesData) {
+      const cat = categoriesData.find(c => c.id.toString() === form.category_id.toString());
+      if (cat) {
+        catCode = cat.name.replace(/[^a-zA-Z0-9 ]/g, '').split(' ')
+          .filter(w => w.length > 0).map(w => w[0].toUpperCase()).join('').substring(0, 2) + '-';
+      }
+    }
+
+    // 3. Name Initials (up to 3 letters)
+    const initials = form.name.replace(/[^a-zA-Z0-9 ]/g, '').split(' ')
+      .filter(w => w.length > 0).map(w => w[0].toUpperCase()).join('').substring(0, 3);
+
+    // 4. Volume/Size or Random Suffix
+    let suffix = '';
+    if (form.volume) {
+      suffix = '-' + form.volume.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().substring(0, 4);
+    } else {
+      // If no volume, append a random 3-digit number to ensure uniqueness
+      suffix = '-' + Math.floor(100 + Math.random() * 900);
+    }
+
+    const generatedSku = `${prefix}-${catCode}${initials}${suffix}`;
+    setForm(f => ({ ...f, sku: generatedSku }));
+    toast.success('SKU dynamically generated!');
+  }
+
   const handleDrop = (e) => {
     e.preventDefault()
     setDrag(false)
@@ -270,12 +308,22 @@ export default function ProductForm() {
 
             <div className="grid grid-cols-2 gap-4">
               <FormRow label="SKU *" hint="Unique identifier for this product">
-                <input
-                  value={form.sku}
-                  onChange={(e) => setForm((f) => ({ ...f, sku: e.target.value.toUpperCase() }))}
-                  className="input-field font-mono"
-                  placeholder="LG-FC-001"
-                />
+                <div className="flex gap-2">
+                  <input
+                    value={form.sku}
+                    onChange={(e) => setForm((f) => ({ ...f, sku: e.target.value.toUpperCase() }))}
+                    className="input-field font-mono w-full"
+                    placeholder="LG-FC-001"
+                  />
+                  <button 
+                    type="button" 
+                    onClick={handleGenerateSKU}
+                    className="btn-outline px-3 whitespace-nowrap text-xs font-medium"
+                    title="Auto-generate professional SKU"
+                  >
+                    Generate
+                  </button>
+                </div>
               </FormRow>
               <FormRow label="URL Slug">
                 <input
